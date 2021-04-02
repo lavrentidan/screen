@@ -1,8 +1,17 @@
-import React from 'react';
+import React from 'react'
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+// import TestAlgo from './TestAlgo';
+// import {PythonShell} from 'python-shell';
+
+// let {PythonShell} = require('python-shell');
+
+
+
+
+
 
 ReactDOM.render(
   <React.StrictMode>

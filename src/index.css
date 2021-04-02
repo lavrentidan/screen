@@ -11,3 +11,34 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.componentPage {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 454px;
+  height: 136px;
+  background-color: rgb(172, 93, 93);
+  border-radius: 5px;
+  /* padding: 10px; */
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.wrapper {
+  position: relative;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  padding: 0;
+  width: 454px;
+  height: 136px;
+}
+

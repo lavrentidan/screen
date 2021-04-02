@@ -1,0 +1,43 @@
+.container {
+    width: 500px;
+    margin-left: 25%;
+    margin-top: 25%;
+    padding: 10px;
+    border: 1px solid black;
+    min-height: 20px;
+    display: flex;
+    overflow-x: hidden;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+}
+
+.pill {
+    background-color: teal;
+    color: white;
+    font-size: 20px;
+    padding: 5px;
+    margin-right: 5px;
+    width: fit-content;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+.pill-num {
+    background-color: teal;
+    color: white;
+    font-size: 20px;
+    padding: 5px;
+    margin-right: 10px;
+    width: fit-content;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+
+body {
+    background-color: white;
+}
