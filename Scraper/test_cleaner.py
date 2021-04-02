@@ -6,9 +6,10 @@ import json
 import os
 import time
 
+path = os.getcwd()
 
 # path = r'C:\Users\daniel.lavrentiev\Dropbox\Screen Project\Scraper'
-scraper('danlav', "Yakima12!@", r'C:\Users\daniel.lavrentiev\Dropbox\Screen Project\Scraper')
+scraper('danlav', "Yakima12!@", path)
 
 workbook = load_workbook(filename='Jobsites.xlsx')
 sheet = workbook.active
@@ -45,7 +46,7 @@ for j in range (1, max_row+1):
 
 # json_str = json.dumps(houses, default=str, indent=4)
 
-screen_path = r'C:\Users\daniel.lavrentiev\Desktop\screen-react-test\screen\src'
+screen_path = 'screen/src'
 
 with open(os.path.join(screen_path, 'houses.json'), 'w') as json_file:
     json.dump(houses, json_file, default=str)
