@@ -58,11 +58,13 @@ const idAdd = (element) => {
 }
 
 const formatDate = (element) => {
-        let newDate = new Date(element)
-        if (element !== null) {
+    if (element !== null) {
+            let newDate = new Date(element.replace(/\s/, 'T')+'Z')
             let month = newDate.getMonth()+1
             let day = newDate.getDate()
             let year = newDate.getFullYear()
+
+
             return `${month}/${day}/${year}`
         } else {
             return null
@@ -131,7 +133,7 @@ for (let i = 0; i < homes.length; i++) {
 }
 
 
-
+// console.log(homes)
 
 
 // console.log(homes)

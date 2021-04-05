@@ -85,7 +85,7 @@ const handleOverflowRender = (list) => {
   
 
   return (
-    <motion.ul ref={ref} className='pill-container'  >
+    <motion.ul ref={ref} className={props.expandClass}  >
       {testList.map((pill, i) => 
         <motion.li key={i} className='infopill'>{pill}</motion.li>
       )}
@@ -140,7 +140,8 @@ function PermitGroup (props) {
 
   function yearChopper (date) {
     if (date !== null && date !== undefined) {
-      let chopped = date.slice(0, -5)
+      let chopped = (date.slice(0, -5))
+      // let choppedStr = chopped.toString()
       return chopped
     } else {
       return 'null'
@@ -265,7 +266,7 @@ function CardList({ items, setIndex }) {
 
             <motion.div layout layoutId={`${contentItem.id}head`} className='head'>
               <TitleSection streetAddress={contentItem.streetAddress} color={contentItem.jobColor} />
-              <PillSection modelNumber={contentItem.modelNumber} subdivisionAndPhase={contentItem.subdivisionAndPhase} lotNumber={contentItem.lotNumber} city={contentItem.city} projectManager={contentItem.projectManager} listingAgent={contentItem.listingAgent} jobType={contentItem.jobType} company={contentItem.company} />
+              <PillSection expandClass='pill-container' modelNumber={contentItem.modelNumber} subdivisionAndPhase={contentItem.subdivisionAndPhase} lotNumber={contentItem.lotNumber} city={contentItem.city} projectManager={contentItem.projectManager} listingAgent={contentItem.listingAgent} jobType={contentItem.jobType} company={contentItem.company} />
             </motion.div>
 
 
@@ -289,7 +290,7 @@ function ExpandedCard(props) {
         
           <motion.div layout layoutId={`${props.card.id}head`} className='head'>
             <TitleSection streetAddress={props.card.streetAddress} color={props.card.jobColor} />
-            <PillSection modelNumber={props.card.modelNumber} subdivisionAndPhase={props.card.subdivisionAndPhase} lotNumber={props.card.lotNumber} city={props.card.city} projectManager={props.card.projectManager} listingAgent={props.card.listingAgent} jobType={props.card.jobType} company={props.card.company}/>
+            <PillSection  expandClass='pill-container-expanded' modelNumber={props.card.modelNumber} subdivisionAndPhase={props.card.subdivisionAndPhase} lotNumber={props.card.lotNumber} city={props.card.city} projectManager={props.card.projectManager} listingAgent={props.card.listingAgent} jobType={props.card.jobType} company={props.card.company}/>
           </motion.div>
 
           <motion.div layout layoutId={`${props.card.id}body`}  className='body' style={{ flexWrap:'wrap', alignContent:'flex-start' }}>

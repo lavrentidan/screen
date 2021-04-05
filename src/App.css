@@ -16,6 +16,9 @@
   height: 136px;
 } */
 
+
+
+
 body {
   background-color: rgb(26, 26, 33);
 
@@ -217,6 +220,19 @@ html, .cards-container, body {
   margin: 0;
 }
 
+.pill-container-expanded {
+  width: calc(100% + 5px);
+  display: flex;
+  overflow-x: hidden;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  list-style: none;
+  text-overflow: ellipsis;
+  /* margin: 0; */
+  padding: 0px;
+  margin: 0;
+}
+
 .grouper {
   border-radius: 5px;
   background-color: rgb(80, 80, 84);
@@ -394,3 +410,35 @@ progress[value]::-webkit-progress-value {
 
 }
 
+@media (max-width: 600px) {
+  /* .modal {
+  background: black;
+  opacity: 0.2;
+  backdrop-filter: brightness(40%);
+  } */
+  .card-expanded {
+    width: 380px;
+    height: fit-content;
+  }
+  .pill-container-expanded {
+    overflow-x: auto;
+    flex-wrap: wrap;
+    white-space:normal;
+    text-overflow: ellipsis;
+  }
+  .pill-container-expanded >.infopill {
+    margin-bottom: 5px;
+  }
+  #progress-group {
+    width: 100%;
+    height: min-content;
+  }
+  #lot-group {
+    width: 100%;
+  }
+
+  .card-expanded > .head {
+    padding-bottom: 5px;
+  }
+
+}
