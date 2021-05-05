@@ -1,7 +1,13 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { motion, AnimateSharedLayout, AnimatePresence } from "framer-motion"
 import './App.css';
-import homes from './dataClean';
+// import homes from './dataClean';
+// import houseData from './dataClean'
+import finalFetch from './dataClean';
+// import finalFetch from './dataClean';
+// let homes = await import ('./dataClean.js');
+import axios from 'axios'
+import fetch from 'node-fetch';
 
 // let {PythonShell} = require('python-shell');
 
@@ -26,6 +32,15 @@ import homes from './dataClean';
 //   )
 // }
 
+
+
+const updater = () => {
+
+}
+
+
+
+
 function TitleSection(props) {
 
   const hex = props.color
@@ -42,20 +57,20 @@ function TitleSection(props) {
 
 function PillSection(props) { // This code looks like shit, but don't screw with it
   const pillList = [props.company,
-                    props.modelNumber, 
-                    props.subdivisionAndPhase, 
-                    props.lotNumber, 
-                    props.city, 
-                    props.projectManager, 
-                    props.listingAgent, 
-                    props.jobType]  
+  props.modelNumber,
+  props.subdivisionAndPhase,
+  props.lotNumber,
+  props.city,
+  props.projectManager,
+  props.listingAgent,
+  props.jobType]
   const ref = useRef(); // Don't not use useRef, using literally anything else will break this component
   const [isOverflowed, setIsOverflowed] = useState(false);
   const [testList, setTestList] = useState(pillList);
   let filtered = testList.filter((pill, index) => index < testList.length - 1);
-  
 
-      
+
+
   useEffect(() => {
     if (ref.current.clientWidth < ref.current.scrollWidth) {
       setIsOverflowed(true)
@@ -65,28 +80,28 @@ function PillSection(props) { // This code looks like shit, but don't screw with
   }, [ref, isOverflowed])
 
   useEffect(() =>
-  !isOverflowed ? handleFilter : setIsOverflowed(false),
-  [isOverflowed]// I have no idea why this works but don't touch it
-)
+    !isOverflowed ? handleFilter : setIsOverflowed(false),
+    [isOverflowed]// I have no idea why this works but don't touch it
+  )
 
 
-const handleOverflowRender = (list) => {
-  let overFlowVal = pillList.length - list.length
-  if (list.length < pillList.length) {
-    return <motion.li className='infopill-expand'>+{overFlowVal}</motion.li>
-  } else {
+  const handleOverflowRender = (list) => {
+    let overFlowVal = pillList.length - list.length
+    if (list.length < pillList.length) {
+      return <motion.li className='infopill-expand'>+{overFlowVal}</motion.li>
+    } else {
+    }
   }
-}
 
   const handleFilter = () => {
     let filtered = testList.filter((pill, index) => index < testList.length - 1);
     setTestList(filtered)
   }
-  
+
 
   return (
     <motion.ul ref={ref} className={props.expandClass}  >
-      {testList.map((pill, i) => 
+      {testList.map((pill, i) =>
         <motion.li key={i} className='infopill'>{pill}</motion.li>
       )}
       {handleOverflowRender(testList)}
@@ -136,9 +151,9 @@ function IndicatorGroup(props) {
   );
 }
 
-function PermitGroup (props) {
+function PermitGroup(props) {
 
-  function yearChopper (date) {
+  function yearChopper(date) {
     if (date !== null && date !== undefined) {
       let chopped = (date.slice(0, -5))
       // let choppedStr = chopped.toString()
@@ -165,45 +180,45 @@ function PermitGroup (props) {
 
   return (
     <motion.div className='grouper' id='permit-group'>
-              <motion.div className='relational-container ' style={{ width: '45%' }}>
-                <motion.div className='relational-key'>City</motion.div>
-                <motion.div className='relational-line'></motion.div>
-                <motion.div className='relational-value'>{yearChopper(props.citySub)}</motion.div>
-              </motion.div>
-              <motion.div className='relational-container ' style={{ width: '55%' }}>
-                <motion.div className='relational-key'>Utils sent</motion.div>
-                <motion.div className='relational-line'></motion.div>
-                {utilNotifier(props.utilitiesSent)}
-              </motion.div>
-              <motion.div className='relational-container' style={{ width: '45%' }}>
-                <motion.div className='relational-key'>Permit</motion.div>
-                <motion.div className='relational-line'></motion.div>
-                <motion.div className='relational-value'>{yearChopper(props.permit)}</motion.div>
-                
-              </motion.div>
-              <motion.div className='relational-container' style={{ width: '55%' }}>
-                <motion.div className='relational-key'>Utils payed</motion.div>
-                <motion.div className='relational-line'></motion.div>
-                {utilNotifier(props.utilitiesPaid)}
-              </motion.div>
-            </motion.div>
+      <motion.div className='relational-container ' style={{ width: '45%' }}>
+        <motion.div className='relational-key'>City</motion.div>
+        <motion.div className='relational-line'></motion.div>
+        <motion.div className='relational-value'>{yearChopper(props.citySub)}</motion.div>
+      </motion.div>
+      <motion.div className='relational-container ' style={{ width: '55%' }}>
+        <motion.div className='relational-key'>Utils sent</motion.div>
+        <motion.div className='relational-line'></motion.div>
+        {utilNotifier(props.utilitiesSent)}
+      </motion.div>
+      <motion.div className='relational-container' style={{ width: '45%' }}>
+        <motion.div className='relational-key'>Permit</motion.div>
+        <motion.div className='relational-line'></motion.div>
+        <motion.div className='relational-value'>{yearChopper(props.permit)}</motion.div>
+
+      </motion.div>
+      <motion.div className='relational-container' style={{ width: '55%' }}>
+        <motion.div className='relational-key'>Utils payed</motion.div>
+        <motion.div className='relational-line'></motion.div>
+        {utilNotifier(props.utilitiesPaid)}
+      </motion.div>
+    </motion.div>
   )
 }
 
 
-function SqftGroup (props) {
+function SqftGroup(props) {
   const sfAppender = (value) => {
     return `${value} SF`
   }
 
   return (
     <motion.div className='grouper' id='sf-group' >
-      <motion.div className='relational-container' style={{ width:'100%' }} >
+      <motion.div className='relational-container' style={{ width: '100%' }} >
         <motion.div className='relational-key' >Garage</motion.div>
         <motion.div className='relational-line' ></motion.div>
         <motion.div className='relational-value'>{sfAppender(props.garage)}</motion.div>
       </motion.div>
-      <motion.div className='relational-container' style={{ width:'100%' }} >
+      <motion.div className='relational-container' style={{ width: '100%' }} >
         <motion.div className='relational-key' >Covered</motion.div>
         <motion.div className='relational-line' ></motion.div>
         <motion.div className='relational-value'>{sfAppender(props.covered)}</motion.div>
@@ -213,7 +228,7 @@ function SqftGroup (props) {
 }
 
 
-function LotGroup (props) {
+function LotGroup(props) {
 
   const parcelChecker = (value) => {
     if (!value) {
@@ -225,12 +240,12 @@ function LotGroup (props) {
 
   return (
     <motion.div className='grouper' id='lot-group' >
-      <motion.div className='relational-container' style={{ width:'100%' }} >
+      <motion.div className='relational-container' style={{ width: '100%' }} >
         <motion.div className='relational-key' >Lot Size</motion.div>
         <motion.div className='relational-line' ></motion.div>
         <motion.div className='relational-value'>{props.lotSize}</motion.div>
       </motion.div>
-      <motion.div className='relational-container' style={{ width:'100%' }} >
+      <motion.div className='relational-container' style={{ width: '100%' }} >
         <motion.div className='relational-key' >Parcel</motion.div>
         <motion.div className='relational-line' ></motion.div>
         <motion.div className='relational-value'>{parcelChecker(props.parcel)}</motion.div>
@@ -251,18 +266,41 @@ function ProgressGroup(props) {
   )
 }
 
-function CardList({ items, setIndex }) {
+function CardList({setIndex, items, setHomes }) {
+
+
+  // async function handleChange() {
+  //   setTest(true)
+  //   if (test) {
+  //     setItems(await testFetchFunc())
+  //     // console.log(houseData)
+  //   } else {
+  //     setItems([])
+  //   }
+  // }
+
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const req = await finalFetch()
+  //     setHomes(req)
+  //   }
+  //   fetchData();
+  // }, [setHomes])
+
+
+
 
   return (
     <ul className='cards-container'>
       {items.map((contentItem, i) => (
         contentItem.streetAddress ?
-        <motion.li layout
-          className='card'
-          key={i}
-          onClick={() => setIndex(i)}
-          layoutId={contentItem.id}
-        >
+          <motion.li layout
+            className='card'
+            key={i}
+            onClick={() => setIndex(i)}
+            layoutId={contentItem.id}
+          >
 
             <motion.div layout layoutId={`${contentItem.id}head`} className='head'>
               <TitleSection streetAddress={contentItem.streetAddress} color={contentItem.jobColor} />
@@ -270,11 +308,11 @@ function CardList({ items, setIndex }) {
             </motion.div>
 
 
-          <motion.div className='body' layout layoutId={`${contentItem.id}body`} >
-            <IndicatorGroup widthType='indicator-group' ccrs={contentItem.ccRs} floorJoists={contentItem.floorJoists} lumber={contentItem.orderLumber} materials={contentItem.orderMaterial} osb={contentItem.orderOsb} planReview={contentItem.planReview} selections={contentItem.selections} trusses={contentItem.trusses} />
-            <PermitGroup permit={contentItem.permit} utilitiesPaid={contentItem.utilitiesPaid} utilitiesSent={contentItem.utilitiesSent} citySub={contentItem.citySub} />
-          </motion.div>
-        </motion.li> : console.log('something')
+            <motion.div className='body' layout layoutId={`${contentItem.id}body`} >
+              <IndicatorGroup widthType='indicator-group' ccrs={contentItem.ccRs} floorJoists={contentItem.floorJoists} lumber={contentItem.orderLumber} materials={contentItem.orderMaterial} osb={contentItem.orderOsb} planReview={contentItem.planReview} selections={contentItem.selections} trusses={contentItem.trusses} />
+              <PermitGroup permit={contentItem.permit} utilitiesPaid={contentItem.utilitiesPaid} utilitiesSent={contentItem.utilitiesSent} citySub={contentItem.citySub} />
+            </motion.div>
+          </motion.li> : console.log('')
       ))}
     </ul>
   )
@@ -287,20 +325,20 @@ function ExpandedCard(props) {
         layoutId={props.card.id}
         className='card-expanded'
       >
-        
-          <motion.div layout layoutId={`${props.card.id}head`} className='head'>
-            <TitleSection streetAddress={props.card.streetAddress} color={props.card.jobColor} />
-            <PillSection  expandClass='pill-container-expanded' modelNumber={props.card.modelNumber} subdivisionAndPhase={props.card.subdivisionAndPhase} lotNumber={props.card.lotNumber} city={props.card.city} projectManager={props.card.projectManager} listingAgent={props.card.listingAgent} jobType={props.card.jobType} company={props.card.company}/>
-          </motion.div>
 
-          <motion.div layout layoutId={`${props.card.id}body`}  className='body' style={{ flexWrap:'wrap', alignContent:'flex-start' }}>
-            <IndicatorGroup widthType='indicator-group-expanded' ccrs={props.card.ccRs} floorJoists={props.card.floorJoists} lumber={props.card.orderLumber} materials={props.card.orderMaterial} osb={props.card.orderOsb} planReview={props.card.planReview} selections={props.card.selections} trusses={props.card.trusses} />
-            <ProgressGroup progress={props.card.progress} />
-            <PermitGroup permit={props.card.permit} utilitiesPaid={props.card.utilitiesPaid} utilitiesSent={props.card.utilitiesSent} citySub={props.card.citySub} />
-            <SqftGroup garage={props.card.garageSf} covered={props.card.coveredAreaSf} />
-            <LotGroup  lotSize={'null'} parcel={props.card.parcelNumber} />
-          </motion.div>
-        
+        <motion.div layout layoutId={`${props.card.id}head`} className='head'>
+          <TitleSection streetAddress={props.card.streetAddress} color={props.card.jobColor} />
+          <PillSection expandClass='pill-container-expanded' modelNumber={props.card.modelNumber} subdivisionAndPhase={props.card.subdivisionAndPhase} lotNumber={props.card.lotNumber} city={props.card.city} projectManager={props.card.projectManager} listingAgent={props.card.listingAgent} jobType={props.card.jobType} company={props.card.company} />
+        </motion.div>
+
+        <motion.div layout layoutId={`${props.card.id}body`} className='body' style={{ flexWrap: 'wrap', alignContent: 'flex-start' }}>
+          <IndicatorGroup widthType='indicator-group-expanded' ccrs={props.card.ccRs} floorJoists={props.card.floorJoists} lumber={props.card.orderLumber} materials={props.card.orderMaterial} osb={props.card.orderOsb} planReview={props.card.planReview} selections={props.card.selections} trusses={props.card.trusses} />
+          <ProgressGroup progress={props.card.progress} />
+          <PermitGroup permit={props.card.permit} utilitiesPaid={props.card.utilitiesPaid} utilitiesSent={props.card.utilitiesSent} citySub={props.card.citySub} />
+          <SqftGroup garage={props.card.garageSf} covered={props.card.coveredAreaSf} />
+          <LotGroup lotSize={'null'} parcel={props.card.parcelNumber} />
+        </motion.div>
+
       </motion.div>
     </div>
   )
@@ -308,12 +346,113 @@ function ExpandedCard(props) {
 
 
 
+
+function TestButton({ fetchData, anotherVal }) {
+
+
+  const [test, setTest] = useState(false);
+  const [testVal, setTestVal] = useState("This is rand test")
+
+
+
+  async function handleChange() {
+    setTest(!test)
+    if (test) {
+      setTestVal(await testFunc())
+      // console.log(houseData)
+    } else {
+      setTestVal("This is rand test")
+    }
+  }
+
+  return (
+    <div>
+      <button className='test-button' onClick={handleChange}>This is a test</button>
+      <p style={{ color: "white" }}>{testVal}</p>
+      <p></p>
+    </div>
+
+  );
+}
+
+const testFunc = async () => {
+  const req = await fetch("/.netlify/functions/puller", {
+    method:'POST',
+    body: JSON.stringify({url: 'https://infinity-scraper-files.s3.us-east-2.amazonaws.com//tmp/houses.json'})
+  })
+  const res = await req.text()
+  return res
+}
+
+const testFetchFunc = async () => {
+  const res = await finalFetch()
+  return res
+}
+
 function App() {
 
   const [index, setIndex] = useState(false);
+  const [homes, setHomes] = useState([]);
+  const [forceState, setForceState] = useState(false)
+
+  const fetchData = async () => {
+    const results = await axios.get("/.netlify/functions/hello")
+    let formResults = JSON.parse(results.data.message)
+    return formResults
+
+  }
+
+  // const fetchHouses = async () => {
+  //   const houseResults = await axios.get("/.netlify/functions/puller")
+  //   let newHouseResults = JSON.stringify(houseResults)
+  //   console.log(newHouseResults)
+  // }
+
+  // useEffect(() => {
+  //   fetchHouses()
+  // }, [])
+
+  // useEffect(() => {
+  //   async function grabData() {
+  //     const json = await finalFetch()
+  //     console.log(await finalFetch())
+  //     setHomes(json)
+  //   }
+  //   grabData();
+  // }, [setHomes]);
+
+  
+  
+  // useEffect(() => {
+  //   finalFetch()
+  //     .then((houseData) => {
+  //       setHomes(houseData)
+  //       console.log(houseData)
+  //     })
+  // }, [setHomes]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const req = await finalFetch()
+      setHomes(req)
+    }
+    fetchData();
+  }, [setHomes])
+
+
+  function handleForce() {
+    setForceState(!forceState)
+  }
+
+  // setTimeout(setHomes(finalFetch), 3000)
+
+
+
   return (
     <AnimateSharedLayout type="crossfade">
-      <CardList items={homes} setIndex={setIndex}/>
+      {/* <TestButton fetchData={fetchData} anotherVal={homes}></TestButton> */}
+      {/* <button onClick={handleForce}></button> */}
+      {homes.length > 0 ? <CardList items={homes} setHomes={setHomes} setIndex={setIndex} /> : setTimeout(() => handleForce(), 1000)}
       <AnimatePresence>
         {index !== false && (
           <motion.div
