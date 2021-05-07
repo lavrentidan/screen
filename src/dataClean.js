@@ -178,7 +178,7 @@ const fetchHouses = async () =>
 
 async function finalFetch () {
 
-    dirtyProgress = await (await finalProgressFetch())
+    // dirtyProgress = await (await finalProgressFetch())
     console.log(dirtyProgress)
     fetchHouses().then((houses) => {
 
@@ -211,7 +211,7 @@ async function finalFetch () {
         element.trusses = toBoolean(element.trusses)
         element.jobColor = toHex(element.jobColor)
         
-        element.progress = progressAppend(element.jobName, dirtyProgress)
+        // element.progress = progressAppend(element.jobName, dirtyProgress)
     }
 }
 )
