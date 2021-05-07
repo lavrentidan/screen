@@ -1,31 +1,25 @@
-// const houses_progress = require("./progress.json");
-import finalFetch from './dataClean'
 const { default: fetch } = require("node-fetch");
+const axios = require('axios')
+
 
 
 
 
 const globalRegex = new RegExp(/([*])\w+/);
 
-let lel;
+
 let dirtyProgress;
 
 // Parses the json data and save it to a variable
-const fetchProgress = async () => {
-    let houses_progress = await (await fetch('/.netlify/functions/progressPuller')).json()
-    lel = JSON.parse(houses_progress.data.chartData)
-    return lel
-}
 
 
-// let form = JSON.parse(houses_progress.data.chartData)
-// let date = JSON.parse(houses_progress.data.chartData)
-// console.log(date.series)
 
 
-async function finalProgressFetch() {
-    fetchProgress().then((lel) => {
-        // let progressObject = {}
+exports.handler = function(event, context, callback) {
+    const url = 'https://infinity-scraper-files.s3.us-east-2.amazonaws.com//tmp/progress.json'
+
+    axios.get(url).then(houses_progress => {
+        let lel = houses_progress
         let finalArray = []
         let newArray = []
         let newNewArray = []
@@ -71,15 +65,17 @@ async function finalProgressFetch() {
 
         dirtyProgress = finalArray
         console.log(dirtyProgress)
-    })
-    return dirtyProgress
-}
+        })
+        callback(null, {
+            statusCode: 200,
+            body: JSON.stringify(dirtyProgress)
+        })
+    }
 
 
 
-
-export default finalProgressFetch
-
-
+// let form = JSON.parse(houses_progress.data.chartData)
+// let date = JSON.parse(houses_progress.data.chartData)
+// console.log(date.series)
 
 

@@ -1,14 +1,16 @@
 // import houses from './dataGrab';
+import finalProgressFetch from './progressClean'
 import fetch from 'node-fetch'
 // import axios from 'axios';
 const axios = require('axios')
 // import { request } from 'http';
-const dirtyProgress = require("./progressClean")
-const newDirtyProgress = dirtyProgress
+// const dirtyProgress = require("./progressClean")
+// const newDirtyProgress = dirtyProgress
 // let houses = require("./houses.json");
 const { v4: uuidv4 } = require("uuid");
 const https = require ('https');
 const request = require('request');
+
 
 // let houses;
 // let url = "https://infinity-scraper-files.s3.us-east-2.amazonaws.com//tmp/houses.json"
@@ -169,16 +171,19 @@ const progressAppend = (element, progArray) => {
 
 let homes = [];
 let houseObject = {};
+let dirtyProgress = [];
 
 const fetchHouses = async () =>
     await (await fetch('/.netlify/functions/puller')).json();
 
 async function finalFetch () {
+
+    dirtyProgress = await (await finalProgressFetch())
+    console.log(dirtyProgress)
     fetchHouses().then((houses) => {
 
     let firstRow = houses[0];
     let keys = createKeyArray(firstRow);
-
 
     objectMap(keys, houses);
     idAdd(homes)
@@ -204,10 +209,9 @@ async function finalFetch () {
         element.planReview = toBoolean(element.planReview)
         element.selections = toBoolean(element.selections)
         element.trusses = toBoolean(element.trusses)
-        
         element.jobColor = toHex(element.jobColor)
         
-        element.progress = progressAppend(element.jobName, newDirtyProgress.dirtyProgress)
+        element.progress = progressAppend(element.jobName, dirtyProgress)
     }
 }
 )

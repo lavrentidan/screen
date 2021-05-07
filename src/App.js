@@ -9,6 +9,7 @@ import finalFetch from './dataClean';
 import axios from 'axios'
 import fetch from 'node-fetch';
 
+
 // let {PythonShell} = require('python-shell');
 
 
@@ -266,7 +267,7 @@ function ProgressGroup(props) {
   )
 }
 
-function CardList({setIndex, items, setHomes }) {
+function CardList({ setIndex, items, setHomes }) {
 
 
   // async function handleChange() {
@@ -377,17 +378,79 @@ function TestButton({ fetchData, anotherVal }) {
 
 const testFunc = async () => {
   const req = await fetch("/.netlify/functions/puller", {
-    method:'POST',
-    body: JSON.stringify({url: 'https://infinity-scraper-files.s3.us-east-2.amazonaws.com//tmp/houses.json'})
+    method: 'POST',
+    body: JSON.stringify({ url: 'https://infinity-scraper-files.s3.us-east-2.amazonaws.com//tmp/houses.json' })
   })
   const res = await req.text()
   return res
 }
 
-const testFetchFunc = async () => {
-  const res = await finalFetch()
-  return res
+
+
+
+
+function NavFilter() {
+
+
+
+  return (
+    <div className="filter-container">
+      <ul className="filter-list">
+        <div className="nav-row-title">Filter:</div>
+        <li className="filter-item">Company</li>
+        <li className="filter-item">Model number</li>
+        <li className="filter-item">Subdivision</li>
+        <li className="filter-item">City</li>
+        <li className="filter-item">Super</li>
+        <li className="filter-item">Realtor</li>
+        <li className="filter-item">Sale</li>
+        <li className="filter-item">Todos</li>
+        <li className="filter-item">Sub to city</li>
+        <li className="filter-item">Permit</li>
+        <li className="filter-item">Utils sent</li>
+        <li className="filter-item">Utils paid</li>
+        <li className="filter-item">Progress</li>
+      </ul>
+    </div>
+
+    );
 }
+
+
+function NavBar({ handleForce }) {
+  const [expanded, setExpanded] = useState(false);
+
+  const handleClick = () => {
+    setExpanded(!expanded)
+  }
+
+  const heightChanger = () => {
+    if (expanded) {
+      return 'nav-unfolded'
+    }
+  }
+
+  const classNames = 'navbar ' + heightChanger()
+
+  return (<nav className={classNames}>
+    <h2 className="nav-title">Test header</h2>
+    <ul className="nav-container">
+      <li className="navbar-item" onClick={handleClick}>
+        Expand bar
+          </li>
+      <li className="navbar-item" onClick={handleForce}>
+        Refresh screen
+          </li>
+      <li className="navbar-item">
+        Move to another page
+          </li>
+    </ul>
+    <div className="break"></div>
+    { expanded ? <NavFilter></NavFilter> : null}
+
+  </nav>);
+}
+
 
 function App() {
 
@@ -421,8 +484,8 @@ function App() {
   //   grabData();
   // }, [setHomes]);
 
-  
-  
+
+
   // useEffect(() => {
   //   finalFetch()
   //     .then((houseData) => {
@@ -444,12 +507,14 @@ function App() {
     setForceState(!forceState)
   }
 
-  // setTimeout(setHomes(finalFetch), 3000)
 
+
+  // setTimeout(setHomes(finalFetch), 3000)
 
 
   return (
     <AnimateSharedLayout type="crossfade">
+      <NavBar handleForce={handleForce}></NavBar>
       {/* <TestButton fetchData={fetchData} anotherVal={homes}></TestButton> */}
       {/* <button onClick={handleForce}></button> */}
       {homes.length > 0 ? <CardList items={homes} setHomes={setHomes} setIndex={setIndex} /> : setTimeout(() => handleForce(), 1000)}
