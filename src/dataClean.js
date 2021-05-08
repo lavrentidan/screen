@@ -176,10 +176,14 @@ let dirtyProgress = [];
 const fetchHouses = async () =>
     await (await fetch('/.netlify/functions/puller')).json();
 
+const fetchProgress = async () => {
+    let oof =  finalProgressFetch()
+    return oof
+}
+
 async function finalFetch () {
 
-    // dirtyProgress = await (await finalProgressFetch())
-    console.log(dirtyProgress)
+    dirtyProgress = await (await finalProgressFetch())
     fetchHouses().then((houses) => {
 
     let firstRow = houses[0];
@@ -211,10 +215,21 @@ async function finalFetch () {
         element.trusses = toBoolean(element.trusses)
         element.jobColor = toHex(element.jobColor)
         
-        // element.progress = progressAppend(element.jobName, dirtyProgress)
+        element.progress = progressAppend(element.jobName, dirtyProgress)
     }
-}
-)
+})
+
+//     finalProgressFetch().then((dirtyProgress) => {
+//         console.log(dirtyProgress)
+//         for (let i = 0; i < homes.length; i++) {
+//             const element = homes[i];
+            
+//             element.progress = progressAppend(element.jobName, dirtyProgress)
+//         }
+// })
+
+    console.log(fetchProgress())
+
     return homes
 }
 

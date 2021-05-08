@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.8.1",
     "axios": "^0.21.1",
     "framer-motion": "^3.10.0",
+    "netlify-cli": "^3.28.0",
     "node-fetch": "^2.6.1",
     "python-shell": "^3.0.0",
     "react": "^17.0.1",

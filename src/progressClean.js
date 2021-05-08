@@ -22,13 +22,13 @@ const fetchProgress = async () => {
 // let date = JSON.parse(houses_progress.data.chartData)
 // console.log(date.series)
 
+let finalArray = []
+let newArray = []
+let newNewArray = []
 
 async function finalProgressFetch() {
     fetchProgress().then((lel) => {
         // let progressObject = {}
-        let finalArray = []
-        let newArray = []
-        let newNewArray = []
 
 
         // Set newArray to list round numbers of the completion
@@ -68,11 +68,8 @@ async function finalProgressFetch() {
         // console.log(finalArray)
         // console.log(newArray.length)
         // console.log(newNewArray.length)
-
-        dirtyProgress = finalArray
-        console.log(dirtyProgress)
     })
-    return dirtyProgress
+    return finalArray
 }
 
 
