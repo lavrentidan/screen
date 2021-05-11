@@ -68,6 +68,7 @@ html, .cards-container, body {
   /* padding-right: 10px; */
   cursor: pointer;
   z-index: 0;
+  user-select: none;
 }
 
 .card-expanded {
@@ -88,6 +89,7 @@ html, .cards-container, body {
   padding-right: 0px;
   padding-top: 5px;
   cursor: pointer;
+  user-select: none;
 }
 
 
@@ -135,6 +137,7 @@ html, .cards-container, body {
   /* backdrop-filter: brightness(40%); */
   backdrop-filter: tint;
   position: fixed;
+  /* overflow-y: hidden; */
 }
 
 
@@ -302,6 +305,7 @@ html, .cards-container, body {
   margin-left: 5px;
   margin-right: 5px;
   /* height: min-content; */
+  
 }
 
 .relational-value {
@@ -488,6 +492,7 @@ progress[value]::-webkit-progress-value {
   padding: 5px;
   cursor: pointer;
   z-index: 2;
+  user-select: none;
 }
 
 .nav-container {
@@ -527,25 +532,9 @@ progress[value]::-webkit-progress-value {
 
 .filter-item {
   padding: 5px;
-  border-radius: 5px;
-
-  /* Hardcore drop shadow --------------------------------- */
-  /* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.50)); */
-  
-  /* Card colored background ---------------------------------*/
-  background-color: rgb(46,46,52);
-
-  /* InfoPill colored background ----------------------------- */
-  /* background-color: rgb(74,74,78); */
-  
-  /* Subtle neomorphism vibes when paired with card colored background ---------*/
-  filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.16));
-
-  /* White border used with no drop shadow and color same as nav ---------------- */
-  /* border: 1px solid white;
-  background-color: rgb(26, 26, 33); */
-
-  
+  border-radius: 5px;  
+  background-color: rgb(46,46,52);  
+  filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.16));  
   color: white;
   font-family: 'Roboto', sans-serif;
   font-size: 1em;
@@ -556,6 +545,7 @@ progress[value]::-webkit-progress-value {
   margin-bottom: 5px;
   height: min-content;
   cursor: pointer;
+  user-select: none;
 }
 
 .filter-item-dropdown {

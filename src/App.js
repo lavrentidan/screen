@@ -8,6 +8,7 @@ import finalFetch from './dataClean';
 // let homes = await import ('./dataClean.js');
 import axios from 'axios'
 import fetch from 'node-fetch';
+import DataGrid from 'react-data-grid'
 
 
 // let {PythonShell} = require('python-shell');
@@ -269,28 +270,7 @@ function ProgressGroup(props) {
 
 function CardList({ setIndex, items, setHomes }) {
 
-
-  // async function handleChange() {
-  //   setTest(true)
-  //   if (test) {
-  //     setItems(await testFetchFunc())
-  //     // console.log(houseData)
-  //   } else {
-  //     setItems([])
-  //   }
-  // }
-
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const req = await finalFetch()
-  //     setHomes(req)
-  //   }
-  //   fetchData();
-  // }, [setHomes])
-
-
-
+  // const filtered = items.filter(home => home.city === 'West Richland')
 
   return (
     <ul className='cards-container'>
@@ -450,41 +430,6 @@ function App() {
   const [homes, setHomes] = useState([]);
   const [forceState, setForceState] = useState(false)
 
-  const fetchData = async () => {
-    const results = await axios.get("/.netlify/functions/hello")
-    let formResults = JSON.parse(results.data.message)
-    return formResults
-
-  }
-
-  // const fetchHouses = async () => {
-  //   const houseResults = await axios.get("/.netlify/functions/puller")
-  //   let newHouseResults = JSON.stringify(houseResults)
-  //   console.log(newHouseResults)
-  // }
-
-  // useEffect(() => {
-  //   fetchHouses()
-  // }, [])
-
-  // useEffect(() => {
-  //   async function grabData() {
-  //     const json = await finalFetch()
-  //     console.log(await finalFetch())
-  //     setHomes(json)
-  //   }
-  //   grabData();
-  // }, [setHomes]);
-
-
-
-  // useEffect(() => {
-  //   finalFetch()
-  //     .then((houseData) => {
-  //       setHomes(houseData)
-  //       console.log(houseData)
-  //     })
-  // }, [setHomes]);
 
   useEffect(() => {
     async function fetchData() {
@@ -499,14 +444,21 @@ function App() {
     setForceState(!forceState)
   }
 
-
+  if (index !== false) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'unset';
+  }
 
   // setTimeout(setHomes(finalFetch), 3000)
+
+  const filtered = homes.filter(home => home.city === 'West Richland')
 
 
   return (
     <AnimateSharedLayout type="crossfade">
       <NavBar handleForce={handleForce}></NavBar>
+
       {/* <TestButton fetchData={fetchData} anotherVal={homes}></TestButton> */}
       {/* <button onClick={handleForce}></button> */}
       {homes.length > 0 ? <CardList items={homes} setHomes={setHomes} setIndex={setIndex} /> : setTimeout(() => handleForce(), 1000)}
@@ -520,6 +472,7 @@ function App() {
             className='modal'
             onClick={() => setIndex(false)}
           >
+            
           </motion.div>
         )}
 
