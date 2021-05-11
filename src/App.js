@@ -348,70 +348,61 @@ function ExpandedCard(props) {
 
 
 
-function TestButton({ fetchData, anotherVal }) {
+function DropDownContent() {
 
+  let cities = ['Kennewick', 'Pasco', 'Richland', 'West Richland']
 
-  const [test, setTest] = useState(false);
-  const [testVal, setTestVal] = useState("This is rand test")
-
-
-
-  async function handleChange() {
-    setTest(!test)
-    if (test) {
-      setTestVal(await testFunc())
-      // console.log(houseData)
-    } else {
-      setTestVal("This is rand test")
-    }
-  }
 
   return (
-    <div>
-      <button className='test-button' onClick={handleChange}>This is a test</button>
-      <p style={{ color: "white" }}>{testVal}</p>
-      <p></p>
-    </div>
-
-  );
+    <AnimateSharedLayout>
+      <motion.div layout>
+        {cities.map((city, i) => (
+          <>
+            <motion.div layout className="dropdown-item">{city}</motion.div>
+            {/* <br></br> */}
+          </>
+        ))}
+      </motion.div>
+    </AnimateSharedLayout>
+  )
 }
-
-const testFunc = async () => {
-  const req = await fetch("/.netlify/functions/puller", {
-    method: 'POST',
-    body: JSON.stringify({ url: 'https://infinity-scraper-files.s3.us-east-2.amazonaws.com//tmp/houses.json' })
-  })
-  const res = await req.text()
-  return res
-}
-
-
-
 
 
 function NavFilter() {
 
+  const [dropped, setDropped] = useState(false)
 
+
+
+  let dropHandler = () => {
+    setDropped(!dropped)
+  }
 
   return (
-    <div className="filter-container">
-      <ul className="filter-list">
-        <div className="nav-row-title">Filter:</div>
-        <li className="filter-item">Company</li>
-        <li className="filter-item">Model number</li>
-        <li className="filter-item">Subdivision</li>
-        <li className="filter-item">City</li>
-        <li className="filter-item">Super</li>
-        <li className="filter-item">Realtor</li>
-        <li className="filter-item">Sale</li>
-        <li className="filter-item">Todos</li>
-        <li className="filter-item">Sub to city</li>
-        <li className="filter-item">Permit</li>
-        <li className="filter-item">Utils sent</li>
-        <li className="filter-item">Utils paid</li>
-        <li className="filter-item">Progress</li>
-      </ul>
-    </div>
+    <AnimateSharedLayout type="crossfade">
+      <motion.div layout className="filter-container">
+        <motion.div layout className="nav-row-title">Filter:</motion.div>
+        <motion.ul layout className="filter-list">
+            <motion.li layout className="filter-item">Company</motion.li>
+            <motion.li layout className="filter-item">Model number</motion.li>
+            <motion.li layout className="filter-item">Subdivision</motion.li>
+            <motion.li layout className="filter-item" >
+              <motion.div layout style={{ width: "min-content" }} className="nav-item-title"  onClick={dropHandler}>City</motion.div>
+              {/* <br></br> */}
+              {dropped ? <DropDownContent></DropDownContent> : ''}
+            </motion.li>
+            <motion.li layout className="filter-item">Super</motion.li>
+            <motion.li layout className="filter-item">Realtor</motion.li>
+            <motion.li layout className="filter-item">Sale</motion.li>
+            <motion.li layout className="filter-item">Todos</motion.li>
+            <motion.li layout className="filter-item">Sub to city</motion.li>
+            <motion.li layout className="filter-item">Permit</motion.li>
+            <motion.li layout className="filter-item">Utils sent</motion.li>
+            <motion.li layout className="filter-item">Utils paid</motion.li>
+            <motion.li layout className="filter-item">Progress</motion.li>
+        </motion.ul>
+      </motion.div>
+    </AnimateSharedLayout>
 
     );
 }
@@ -432,23 +423,24 @@ function NavBar({ handleForce }) {
 
   const classNames = 'navbar ' + heightChanger()
 
-  return (<nav className={classNames}>
-    <h2 className="nav-title">Test header</h2>
-    <ul className="nav-container">
-      <li className="navbar-item" onClick={handleClick}>
-        Expand bar
-          </li>
-      <li className="navbar-item" onClick={handleForce}>
-        Refresh screen
-          </li>
-      <li className="navbar-item">
-        Move to another page
-          </li>
-    </ul>
-    <div className="break"></div>
-    { expanded ? <NavFilter></NavFilter> : null}
-
-  </nav>);
+  return (
+      <nav layout className={classNames}>
+        <h2 className="nav-title">BlackBoard</h2>
+        <ul className="nav-container">
+          <li className="navbar-item" onClick={handleClick}>
+            Expand bar
+              </li>
+          <li className="navbar-item" onClick={handleForce}>
+            Refresh screen
+              </li>
+          <li className="navbar-item">
+            Move to another page
+              </li>
+        </ul>
+        <div className="break"></div>
+        { expanded ? <NavFilter></NavFilter> : null}
+      </nav>
+  );
 }
 
 

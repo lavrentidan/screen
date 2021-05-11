@@ -66,6 +66,8 @@ html, .cards-container, body {
   padding-right: 0px;
   padding-top: 5px;
   /* padding-right: 10px; */
+  cursor: pointer;
+  z-index: 0;
 }
 
 .card-expanded {
@@ -85,6 +87,7 @@ html, .cards-container, body {
   padding: 10px;
   padding-right: 0px;
   padding-top: 5px;
+  cursor: pointer;
 }
 
 
@@ -461,12 +464,21 @@ progress[value]::-webkit-progress-value {
   justify-content: space-between;
   /* align-items: center; */
   color: white;
-  background-color: tomato;
   position: sticky;
   /* height: 64px; */
   padding: 5px;
   z-index: 1;
   /* width: 100%; */
+  
+  
+  
+  /* Card colored background with card drop shadow -----------------------*/
+  /* background-color: rgb(46,46,52);
+  filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.16)); */
+
+/* Body colored background with more intense drop shadow ------------------- */
+  background-color: rgb(26, 26, 33);
+  filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.50));
 }
 
 .navbar-item {
@@ -474,6 +486,8 @@ progress[value]::-webkit-progress-value {
   margin-left: 20px;
   border: 1px solid white;
   padding: 5px;
+  cursor: pointer;
+  z-index: 2;
 }
 
 .nav-container {
@@ -487,6 +501,7 @@ progress[value]::-webkit-progress-value {
 .nav-unfolded {
   /* height: 90px; */
   height: min-content;
+  max-height: 79px;
 }
 
 .nav-row-title {
@@ -511,6 +526,39 @@ progress[value]::-webkit-progress-value {
 }
 
 .filter-item {
+  padding: 5px;
+  border-radius: 5px;
+
+  /* Hardcore drop shadow --------------------------------- */
+  /* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.50)); */
+  
+  /* Card colored background ---------------------------------*/
+  background-color: rgb(46,46,52);
+
+  /* InfoPill colored background ----------------------------- */
+  /* background-color: rgb(74,74,78); */
+  
+  /* Subtle neomorphism vibes when paired with card colored background ---------*/
+  filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.16));
+
+  /* White border used with no drop shadow and color same as nav ---------------- */
+  /* border: 1px solid white;
+  background-color: rgb(26, 26, 33); */
+
+  
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1em;
+  font-weight: 500;
+  list-style: none;
+  height: min-content;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  height: min-content;
+  cursor: pointer;
+}
+
+.filter-item-dropdown {
   padding: 5px;
   border-radius: 5px;
   border: 1px solid white;
@@ -539,4 +587,26 @@ progress[value]::-webkit-progress-value {
   padding: 0;
   margin-top: 0;
   margin-bottom: 0;
+}
+
+.dropdown-item {
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.dropdown-item:hover {
+  background-color: rgb(80, 80, 84);
+  cursor: pointer;
+}
+
+.nav-item-title {  border-radius: 5px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1em;
+  font-weight: 500;
+  list-style: none;
+  height: min-content;
 }
