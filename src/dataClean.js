@@ -192,6 +192,11 @@ async function finalFetch () {
     objectMap(keys, houses);
     idAdd(homes)
 
+    for (var i = homes.length - 1; i >= 0; i--) {
+        if (homes[i].streetAddress === null) {
+        homes.splice(i, 1);
+        }
+    }
 
     for (let i = 0; i < homes.length; i++) {
         const element = homes[i];

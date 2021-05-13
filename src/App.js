@@ -268,14 +268,21 @@ function ProgressGroup(props) {
   )
 }
 
-function CardList({ setIndex, items, setHomes }) {
+function CardList({ setIndex, items, setHomes, filter }) {
 
   // const filtered = items.filter(home => home.city === 'West Richland')
+
+  const [cardUpdate, setCardUpdate] = useState(filter)
+
+
+
+  
+
+  console.log(items);
 
   return (
     <ul className='cards-container'>
       {items.map((contentItem, i) => (
-        contentItem.streetAddress ?
           <motion.li layout
             className='card'
             key={i}
@@ -293,7 +300,7 @@ function CardList({ setIndex, items, setHomes }) {
               <IndicatorGroup widthType='indicator-group' ccrs={contentItem.ccRs} floorJoists={contentItem.floorJoists} lumber={contentItem.orderLumber} materials={contentItem.orderMaterial} osb={contentItem.orderOsb} planReview={contentItem.planReview} selections={contentItem.selections} trusses={contentItem.trusses} />
               <PermitGroup permit={contentItem.permit} utilitiesPaid={contentItem.utilitiesPaid} utilitiesSent={contentItem.utilitiesSent} citySub={contentItem.citySub} />
             </motion.div>
-          </motion.li> : console.log('')
+          </motion.li>
       ))}
     </ul>
   )
@@ -328,19 +335,53 @@ function ExpandedCard(props) {
 
 
 
-function DropDownContent() {
+
+function FilterListItem({city, isPressed, setFilter }) {
+
+  // const itemStyle = isPressed ? {
+  //   color: 'white',
+  //   fontFamily: 'Roboto',
+  //   fontSize: '12px',
+  //   fontWeight: 500,
+  //   marginTop: '5px',
+  //   marginBottom: 0
+  // } : {
+  //   color: 'white',
+  //   fontFamily: 'Roboto',
+  //   fontSize: '12px',
+  //   fontWeight: 500,
+  //   marginTop: '5px',
+  //   marginBottom: 0
+  // }
+
+  // const itemStyle = (isPressed ? "dropdown-item" : "dropdown-item dropdown-item-selected")
+
+  return (
+    <motion.button layout
+      className={!isPressed ? "dropdown-item" : "dropdown-item dropdown-item-selected"}
+      aria-pressed={isPressed}
+      onClick={() => setFilter(city)}
+      >
+        {city}
+    </motion.button>
+    );
+}
+
+
+function DropDownContent({ filter, setFilter }) {
 
   let cities = ['Kennewick', 'Pasco', 'Richland', 'West Richland']
 
-
   return (
     <AnimateSharedLayout>
-      <motion.div layout>
-        {cities.map((city, i) => (
-          <>
-            <motion.div layout className="dropdown-item">{city}</motion.div>
-            {/* <br></br> */}
-          </>
+      <motion.div layout className='dropdown-content-container' >
+        {CITY_FILTER_NAMES.map((city, i) => (
+          <FilterListItem
+            key={city}
+            city={city}
+            isPressed={city === filter}
+            setFilter={setFilter}>
+          </FilterListItem>
         ))}
       </motion.div>
     </AnimateSharedLayout>
@@ -348,11 +389,9 @@ function DropDownContent() {
 }
 
 
-function NavFilter() {
+function NavFilter({ filter, setFilter }) {
 
   const [dropped, setDropped] = useState(false)
-
-
 
   let dropHandler = () => {
     setDropped(!dropped)
@@ -363,32 +402,32 @@ function NavFilter() {
       <motion.div layout className="filter-container">
         <motion.div layout className="nav-row-title">Filter:</motion.div>
         <motion.ul layout className="filter-list">
-            <motion.li layout className="filter-item">Company</motion.li>
-            <motion.li layout className="filter-item">Model number</motion.li>
-            <motion.li layout className="filter-item">Subdivision</motion.li>
-            <motion.li layout className="filter-item" >
-              <motion.div layout style={{ width: "min-content" }} className="nav-item-title"  onClick={dropHandler}>City</motion.div>
-              {/* <br></br> */}
-              {dropped ? <DropDownContent></DropDownContent> : ''}
-            </motion.li>
-            <motion.li layout className="filter-item">Super</motion.li>
-            <motion.li layout className="filter-item">Realtor</motion.li>
-            <motion.li layout className="filter-item">Sale</motion.li>
-            <motion.li layout className="filter-item">Todos</motion.li>
-            <motion.li layout className="filter-item">Sub to city</motion.li>
-            <motion.li layout className="filter-item">Permit</motion.li>
-            <motion.li layout className="filter-item">Utils sent</motion.li>
-            <motion.li layout className="filter-item">Utils paid</motion.li>
-            <motion.li layout className="filter-item">Progress</motion.li>
+          <motion.li layout className="filter-item">Company</motion.li>
+          <motion.li layout className="filter-item">Model number</motion.li>
+          <motion.li layout className="filter-item">Subdivision</motion.li>
+          <motion.li layout className="filter-item" >
+            <motion.div layout style={{ width: "min-content" }} className="nav-item-title" onClick={dropHandler}>City</motion.div>
+            {/* <br></br> */}
+            {dropped ? <DropDownContent filter={filter} setFilter={setFilter} ></DropDownContent> : ''}
+          </motion.li>
+          <motion.li layout className="filter-item">Super</motion.li>
+          <motion.li layout className="filter-item">Realtor</motion.li>
+          <motion.li layout className="filter-item">Sale</motion.li>
+          <motion.li layout className="filter-item">Todos</motion.li>
+          <motion.li layout className="filter-item">Sub to city</motion.li>
+          <motion.li layout className="filter-item">Permit</motion.li>
+          <motion.li layout className="filter-item">Utils sent</motion.li>
+          <motion.li layout className="filter-item">Utils paid</motion.li>
+          <motion.li layout className="filter-item">Progress</motion.li>
         </motion.ul>
       </motion.div>
     </AnimateSharedLayout>
 
-    );
+  );
 }
 
 
-function NavBar({ handleForce }) {
+function NavBar({ handleForce, filter, setFilter }) {
   const [expanded, setExpanded] = useState(false);
 
   const handleClick = () => {
@@ -404,32 +443,43 @@ function NavBar({ handleForce }) {
   const classNames = 'navbar ' + heightChanger()
 
   return (
-      <nav layout className={classNames}>
-        <h2 className="nav-title">BlackBoard</h2>
-        <ul className="nav-container">
-          <li className="navbar-item" onClick={handleClick}>
-            Expand bar
+    <nav layout className={classNames}>
+      <h2 className="nav-title">BlackBoard</h2>
+      <ul className="nav-container">
+        <li className="navbar-item" onClick={handleClick}>
+          Expand bar
               </li>
-          <li className="navbar-item" onClick={handleForce}>
-            Refresh screen
+        <li className="navbar-item" onClick={handleForce}>
+          Refresh screen
               </li>
-          <li className="navbar-item">
-            Move to another page
+        <li className="navbar-item">
+          Move to another page
               </li>
-        </ul>
-        <div className="break"></div>
-        { expanded ? <NavFilter></NavFilter> : null}
-      </nav>
+      </ul>
+      <div className="break"></div>
+      { expanded ? <NavFilter filter={filter} setFilter={setFilter} ></NavFilter> : null}
+    </nav>
   );
 }
 
+
+const CITIES_MAP = {
+  All: () => true,
+  Kennewick: home => home.city === 'Kennewick',
+  Pasco: home => home.city === 'Pasco',
+  Richland: home => home.city === 'Richland',
+  'West Richland': home => home.city === 'West Richland'
+};
+
+const CITY_FILTER_NAMES = Object.keys(CITIES_MAP);
 
 function App() {
 
   const [index, setIndex] = useState(false);
   const [homes, setHomes] = useState([]);
   const [forceState, setForceState] = useState(false)
-
+  const [filter, setFilter] = useState('All');
+  
 
   useEffect(() => {
     async function fetchData() {
@@ -452,16 +502,24 @@ function App() {
 
   // setTimeout(setHomes(finalFetch), 3000)
 
-  const filtered = homes.filter(home => home.city === 'West Richland')
+  // const filtered = homes.filter(home => home.city === 'West Richland')
+
+  const filteredHomes = homes.filter(CITIES_MAP[filter])
 
 
   return (
     <AnimateSharedLayout type="crossfade">
-      <NavBar handleForce={handleForce}></NavBar>
+      <NavBar handleForce={handleForce} filter={filter} setFilter={setFilter}> </NavBar>
 
       {/* <TestButton fetchData={fetchData} anotherVal={homes}></TestButton> */}
       {/* <button onClick={handleForce}></button> */}
-      {homes.length > 0 ? <CardList items={homes} setHomes={setHomes} setIndex={setIndex} /> : setTimeout(() => handleForce(), 1000)}
+      {homes.length > 0 ?
+        <CardList
+          items={filteredHomes}
+          setHomes={setHomes}
+          setIndex={setIndex}
+          filter={filter}
+        /> : setTimeout(() => handleForce(), 1000)}
       <AnimatePresence>
         {index !== false && (
           <motion.div
@@ -472,7 +530,7 @@ function App() {
             className='modal'
             onClick={() => setIndex(false)}
           >
-            
+
           </motion.div>
         )}
 
@@ -480,7 +538,7 @@ function App() {
           <ExpandedCard
             key='expandedCard'
             index={index}
-            card={homes[index]}
+            card={filteredHomes[index]}
             setIndex={setIndex}
             onClick={() => setIndex(false)}
           >
