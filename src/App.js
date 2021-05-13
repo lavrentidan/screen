@@ -67,46 +67,46 @@ function PillSection(props) { // This code looks like shit, but don't screw with
   props.listingAgent,
   props.jobType]
   const ref = useRef(); // Don't not use useRef, using literally anything else will break this component
-  const [isOverflowed, setIsOverflowed] = useState(false);
-  const [testList, setTestList] = useState(pillList);
-  let filtered = testList.filter((pill, index) => index < testList.length - 1);
+  // const [isOverflowed, setIsOverflowed] = useState(false);
+  // const [testList, setTestList] = useState(pillList);
+  // let filtered = testList.filter((pill, index) => index < testList.length - 1);
 
 
 
-  useEffect(() => {
-    if (ref.current.clientWidth < ref.current.scrollWidth) {
-      setIsOverflowed(true)
-    } else {
-      setIsOverflowed(false)
-    }
-  }, [ref, isOverflowed])
+  // useEffect(() => {
+  //   if (ref.current.clientWidth < ref.current.scrollWidth) {
+  //     setIsOverflowed(true)
+  //   } else {
+  //     setIsOverflowed(false)
+  //   }
+  // }, [ref, isOverflowed])
 
-  useEffect(() =>
-    !isOverflowed ? handleFilter : setIsOverflowed(false),
-    [isOverflowed]// I have no idea why this works but don't touch it
-  )
+  // useEffect(() =>
+  //   !isOverflowed ? handleFilter : setIsOverflowed(false),
+  //   [isOverflowed]// I have no idea why this works but don't touch it
+  // )
 
 
-  const handleOverflowRender = (list) => {
-    let overFlowVal = pillList.length - list.length
-    if (list.length < pillList.length) {
-      return <motion.li className='infopill-expand'>+{overFlowVal}</motion.li>
-    } else {
-    }
-  }
+  // const handleOverflowRender = (list) => {
+  //   let overFlowVal = pillList.length - list.length
+  //   if (list.length < pillList.length) {
+  //     return <motion.li className='infopill-expand'>+{overFlowVal}</motion.li>
+  //   } else {
+  //   }
+  // }
 
-  const handleFilter = () => {
-    let filtered = testList.filter((pill, index) => index < testList.length - 1);
-    setTestList(filtered)
-  }
+  // const handleFilter = () => {
+  //   let filtered = testList.filter((pill, index) => index < testList.length - 1);
+  //   setTestList(filtered)
+  // }
 
 
   return (
     <motion.ul ref={ref} className={props.expandClass}  >
-      {testList.map((pill, i) =>
+      {pillList.map((pill, i) =>
         <motion.li key={i} className='infopill'>{pill}</motion.li>
       )}
-      {handleOverflowRender(testList)}
+      {/* {handleOverflowRender(testList)} */}
     </motion.ul>
   )
 }
@@ -286,17 +286,17 @@ function CardList({ setIndex, items, setHomes, filter }) {
           <motion.li layout
             className='card'
             key={i}
+            layoutId={i}
             onClick={() => setIndex(i)}
-            layoutId={contentItem.id}
           >
 
-            <motion.div layout layoutId={`${contentItem.id}head`} className='head'>
+            <motion.div layout layoutId={`${i}head`} className='head'>
               <TitleSection streetAddress={contentItem.streetAddress} color={contentItem.jobColor} />
               <PillSection expandClass='pill-container' modelNumber={contentItem.modelNumber} subdivisionAndPhase={contentItem.subdivisionAndPhase} lotNumber={contentItem.lotNumber} city={contentItem.city} projectManager={contentItem.projectManager} listingAgent={contentItem.listingAgent} jobType={contentItem.jobType} company={contentItem.company} />
             </motion.div>
 
 
-            <motion.div className='body' layout layoutId={`${contentItem.id}body`} >
+            <motion.div className='body' layout layoutId={`${i}body`} >
               <IndicatorGroup widthType='indicator-group' ccrs={contentItem.ccRs} floorJoists={contentItem.floorJoists} lumber={contentItem.orderLumber} materials={contentItem.orderMaterial} osb={contentItem.orderOsb} planReview={contentItem.planReview} selections={contentItem.selections} trusses={contentItem.trusses} />
               <PermitGroup permit={contentItem.permit} utilitiesPaid={contentItem.utilitiesPaid} utilitiesSent={contentItem.utilitiesSent} citySub={contentItem.citySub} />
             </motion.div>
@@ -310,16 +310,16 @@ function ExpandedCard(props) {
   return (
     <div className='cards-container-unfolded' onClick={props.onClick}>
       <motion.div layout
-        layoutId={props.card.id}
+        layoutId={props.index}
         className='card-expanded'
       >
 
-        <motion.div layout layoutId={`${props.card.id}head`} className='head'>
+        <motion.div layout layoutId={`${[props.index]}head`} className='head'>
           <TitleSection streetAddress={props.card.streetAddress} color={props.card.jobColor} />
           <PillSection expandClass='pill-container-expanded' modelNumber={props.card.modelNumber} subdivisionAndPhase={props.card.subdivisionAndPhase} lotNumber={props.card.lotNumber} city={props.card.city} projectManager={props.card.projectManager} listingAgent={props.card.listingAgent} jobType={props.card.jobType} company={props.card.company} />
         </motion.div>
 
-        <motion.div layout layoutId={`${props.card.id}body`} className='body' style={{ flexWrap: 'wrap', alignContent: 'flex-start' }}>
+        <motion.div layout layoutId={`${[props.index]}body`} className='body' style={{ flexWrap: 'wrap', alignContent: 'flex-start' }}>
           <IndicatorGroup widthType='indicator-group-expanded' ccrs={props.card.ccRs} floorJoists={props.card.floorJoists} lumber={props.card.orderLumber} materials={props.card.orderMaterial} osb={props.card.orderOsb} planReview={props.card.planReview} selections={props.card.selections} trusses={props.card.trusses} />
           <ProgressGroup progress={props.card.progress} />
           <PermitGroup permit={props.card.permit} utilitiesPaid={props.card.utilitiesPaid} utilitiesSent={props.card.utilitiesSent} citySub={props.card.citySub} />
@@ -480,6 +480,8 @@ function App() {
   const [forceState, setForceState] = useState(false)
   const [filter, setFilter] = useState('All');
   
+  // const [filteredHomes, setFilteredHomes] = useState([])
+  // const [filteredHomes, setfilteredHomes] = useState(homes.filter(CITIES_MAP[filter]))
 
   useEffect(() => {
     async function fetchData() {
@@ -505,6 +507,12 @@ function App() {
   // const filtered = homes.filter(home => home.city === 'West Richland')
 
   const filteredHomes = homes.filter(CITIES_MAP[filter])
+
+
+  // useEffect(() => {
+  //   setFilteredHomes([])
+  //   setFilteredHomes(homes.filter(CITIES_MAP[filter]))
+  // }, [filter, homes])
 
 
   return (
