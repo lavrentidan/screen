@@ -338,33 +338,39 @@ function ExpandedCard(props) {
 
 
 
-function FilterListItem({city, isPressed, setFilter }) {
+function FilterListItem({item, isPressed, setFilter, category, filterCategory, setFilterCategory }) {
 
   return (
     <motion.button layout
       className={!isPressed ? "dropdown-item" : "dropdown-item dropdown-item-selected"}
       aria-pressed={isPressed}
-      onClick={() => setFilter(city)}
+      onClick={() => {setFilterCategory(category); setFilter(item);}}
       >
-        {city}
+        {item}
     </motion.button>
     );
 }
 
 
-function DropDownContent({ filter, setFilter, FILTER_NAMES }) {
+function DropDownContent({ filter, setFilter, FILTER_NAMES, category, filterCategory, setFilterCategory }) {
 
   // let cities = ['Kennewick', 'Pasco', 'Richland', 'West Richland']
+
+  // FILTER_NAMES.unshift("All");
 
   return (
     <AnimateSharedLayout>
       <motion.div layout className='dropdown-content-container' >
-        {FILTER_NAMES.map((city, i) => (
+        {FILTER_NAMES.map((item, i) => (
           <FilterListItem
-            key={city}
-            city={city}
-            isPressed={city === filter}
-            setFilter={setFilter}>
+            key={item}
+            item={item}
+            isPressed={item === filter}
+            setFilter={setFilter}
+            category={category}
+            filterCategory={filterCategory}
+            setFilterCategory={setFilterCategory}
+            >
           </FilterListItem>
         ))}
       </motion.div>
@@ -372,7 +378,7 @@ function DropDownContent({ filter, setFilter, FILTER_NAMES }) {
   )
 }
 
-function DropDown({ filter, setFilter, FILTER_NAMES, dropDownName }) {
+function DropDown({ filter, setFilter, FILTER_NAMES, dropDownName, category, filterCategory, setFilterCategory }) {
   const [dropped, setDropped] = useState(false)
   let dropHandler = () => {
     setDropped(!dropped)
@@ -381,28 +387,26 @@ function DropDown({ filter, setFilter, FILTER_NAMES, dropDownName }) {
     <motion.li layout className="filter-item" >
     <motion.div layout style={{ width: "min-content" }} className="nav-item-title" onClick={dropHandler}>{dropDownName}</motion.div>
     {/* <br></br> */}
-    {dropped ? <DropDownContent filter={filter} setFilter={setFilter} FILTER_NAMES={FILTER_NAMES} ></DropDownContent> : ''}
+    {dropped ? <DropDownContent filter={filter} setFilter={setFilter} FILTER_NAMES={FILTER_NAMES} category={category} filterCategory={filterCategory} setFilterCategory={setFilterCategory} ></DropDownContent> : ''}
   </motion.li>
   )
 }
 
-function NavFilter({ filter, setFilter, testSubArray, homes }) {
+function NavFilter({ filter, setFilter, filterCategory, setFilterCategory, homes }) {
 
   return (
     <AnimateSharedLayout type="crossfade">
       <motion.div layout className="filter-container">
         <motion.div layout className="nav-row-title">Filter:</motion.div>
         <motion.ul layout className="filter-list">
-          <motion.li layout className="filter-item">Company</motion.li>
-          <motion.li layout className="filter-item">Model number</motion.li>
-          {/* <motion.li layout className="filter-item">Subdivision</motion.li> */}
-          <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={getUnique(homes, 'subdivisionAndPhase')} dropDownName={'Subdivision'} />
-          <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={CITY_FILTER_NAMES} dropDownName={'City'} />
-          {/* <motion.li layout className="filter-item">Super</motion.li> */}
-          <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={getUnique(homes, 'projectManager')} dropDownName={'Super'} />
-
-          <motion.li layout className="filter-item">Realtor</motion.li>
-          <motion.li layout className="filter-item">Sale</motion.li>
+          <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={getUnique(homes, 'company')} category={'company'} filterCategory={filterCategory} setFilterCategory={setFilterCategory} dropDownName={'Company'} />
+          <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={getUnique(homes, 'modelNumber')} category={'modelNumber'} filterCategory={filterCategory} setFilterCategory={setFilterCategory} dropDownName={'ModelNumber'} />
+          <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={getUnique(homes, 'subdivisionAndPhase')} category={'subdivisionAndPhase'} filterCategory={filterCategory} setFilterCategory={setFilterCategory} dropDownName={'Subdivision'} />
+          <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={getUnique(homes, 'city')} category={'city'} filterCategory={filterCategory} setFilterCategory={setFilterCategory} dropDownName={'City'} />
+          <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={getUnique(homes, 'projectManager')} category={'projectManager'} filterCategory={filterCategory} setFilterCategory={setFilterCategory} dropDownName={'Super'} />
+          <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={getUnique(homes, 'listingAgent')} category={'listingAgent'} filterCategory={filterCategory} setFilterCategory={setFilterCategory} dropDownName={'Realtor'} />
+          <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={getUnique(homes, 'jobType')} category={'jobType'} filterCategory={filterCategory} setFilterCategory={setFilterCategory} dropDownName={'Sale'} />
+          {/* <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={getUnique(homes, 'status')} category={'status'} filterCategory={filterCategory} setFilterCategory={setFilterCategory} dropDownName={'Status'} /> */}
           <motion.li layout className="filter-item">Todos</motion.li>
           <motion.li layout className="filter-item">Sub to city</motion.li>
           <motion.li layout className="filter-item">Permit</motion.li>
@@ -417,7 +421,7 @@ function NavFilter({ filter, setFilter, testSubArray, homes }) {
 }
 
 
-function NavBar({ handleForce, filter, setFilter, testSubArray, homes }) {
+function NavBar({ handleForce, filter, setFilter, filterCategory, setFilterCategory, homes }) {
   const [expanded, setExpanded] = useState(false);
 
   const handleClick = () => {
@@ -447,7 +451,7 @@ function NavBar({ handleForce, filter, setFilter, testSubArray, homes }) {
               </li>
       </ul>
       <div className="break"></div>
-      { expanded ? <NavFilter filter={filter} setFilter={setFilter} testSubArray={testSubArray} homes={homes}></NavFilter> : null}
+      { expanded ? <NavFilter filter={filter} setFilter={setFilter} filterCategory={filterCategory} setFilterCategory={setFilterCategory} homes={homes}></NavFilter> : null}
     </nav>
   );
 }
@@ -488,6 +492,7 @@ function subMapper (sub, target) {
 
 function getUnique (array, key) {
   let arrayKeyValues = []
+  arrayKeyValues.unshift("All");
   for (let i = 0; i < array.length; i++) {
       const element = array[i][key];
       arrayKeyValues.push(element)
@@ -501,6 +506,7 @@ function App() {
   const [homes, setHomes] = useState([]);
   const [forceState, setForceState] = useState(false)
   const [filter, setFilter] = useState('All');
+  const [filterCategory, setFilterCategory] = useState(undefined)
   
   // const [filteredHomes, setFilteredHomes] = useState([])
   // const [filteredHomes, setfilteredHomes] = useState(homes.filter(CITIES_MAP[filter]))
@@ -530,9 +536,9 @@ function App() {
 
   // const filteredHomes = homes.filter(CITIES_MAP[filter])
 
-  const thing = undefined
-  const specificThing = undefined
-  const filteredHomes = homes.filter(home => home[thing] === specificThing)
+  // const thing = undefined
+  // const specificThing = undefined
+  const filteredHomes = (filter === "All") ? homes : homes.filter(home => home[filterCategory] === filter)
   
 
   // useEffect(() => {
@@ -571,7 +577,7 @@ function App() {
 
   return (
     <AnimateSharedLayout type="crossfade">
-      <NavBar handleForce={handleForce} filter={filter} setFilter={setFilter} testSubArray={testSubArray} homes={homes}></NavBar>
+      <NavBar handleForce={handleForce} filter={filter} setFilter={setFilter} filterCategory={filterCategory} setFilterCategory={setFilterCategory} homes={homes}></NavBar>
 
 
     {/* <Table data={filteredHomes} height={800} style={{ backgroundColor: "rgb(46,46,52)" }} >
