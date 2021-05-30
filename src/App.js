@@ -9,6 +9,8 @@ import finalFetch from './dataClean';
 import axios from 'axios'
 import fetch from 'node-fetch';
 import DataGrid from 'react-data-grid'
+import { Table, Column, HeaderCell, Cell } from 'rsuite-table'
+import 'rsuite-table/dist/css/rsuite-table.css'
 
 
 // let {PythonShell} = require('python-shell');
@@ -278,7 +280,7 @@ function CardList({ setIndex, items, setHomes, filter }) {
 
   
 
-  console.log(items);
+  // console.log(items);
 
   return (
     <ul className='cards-container'>
@@ -338,24 +340,6 @@ function ExpandedCard(props) {
 
 function FilterListItem({city, isPressed, setFilter }) {
 
-  // const itemStyle = isPressed ? {
-  //   color: 'white',
-  //   fontFamily: 'Roboto',
-  //   fontSize: '12px',
-  //   fontWeight: 500,
-  //   marginTop: '5px',
-  //   marginBottom: 0
-  // } : {
-  //   color: 'white',
-  //   fontFamily: 'Roboto',
-  //   fontSize: '12px',
-  //   fontWeight: 500,
-  //   marginTop: '5px',
-  //   marginBottom: 0
-  // }
-
-  // const itemStyle = (isPressed ? "dropdown-item" : "dropdown-item dropdown-item-selected")
-
   return (
     <motion.button layout
       className={!isPressed ? "dropdown-item" : "dropdown-item dropdown-item-selected"}
@@ -368,14 +352,14 @@ function FilterListItem({city, isPressed, setFilter }) {
 }
 
 
-function DropDownContent({ filter, setFilter }) {
+function DropDownContent({ filter, setFilter, FILTER_NAMES }) {
 
-  let cities = ['Kennewick', 'Pasco', 'Richland', 'West Richland']
+  // let cities = ['Kennewick', 'Pasco', 'Richland', 'West Richland']
 
   return (
     <AnimateSharedLayout>
       <motion.div layout className='dropdown-content-container' >
-        {CITY_FILTER_NAMES.map((city, i) => (
+        {FILTER_NAMES.map((city, i) => (
           <FilterListItem
             key={city}
             city={city}
@@ -388,14 +372,21 @@ function DropDownContent({ filter, setFilter }) {
   )
 }
 
-
-function NavFilter({ filter, setFilter }) {
-
+function DropDown({ filter, setFilter, FILTER_NAMES, dropDownName }) {
   const [dropped, setDropped] = useState(false)
-
   let dropHandler = () => {
     setDropped(!dropped)
   }
+  return (
+    <motion.li layout className="filter-item" >
+    <motion.div layout style={{ width: "min-content" }} className="nav-item-title" onClick={dropHandler}>{dropDownName}</motion.div>
+    {/* <br></br> */}
+    {dropped ? <DropDownContent filter={filter} setFilter={setFilter} FILTER_NAMES={FILTER_NAMES} ></DropDownContent> : ''}
+  </motion.li>
+  )
+}
+
+function NavFilter({ filter, setFilter, testSubArray, homes }) {
 
   return (
     <AnimateSharedLayout type="crossfade">
@@ -404,13 +395,12 @@ function NavFilter({ filter, setFilter }) {
         <motion.ul layout className="filter-list">
           <motion.li layout className="filter-item">Company</motion.li>
           <motion.li layout className="filter-item">Model number</motion.li>
-          <motion.li layout className="filter-item">Subdivision</motion.li>
-          <motion.li layout className="filter-item" >
-            <motion.div layout style={{ width: "min-content" }} className="nav-item-title" onClick={dropHandler}>City</motion.div>
-            {/* <br></br> */}
-            {dropped ? <DropDownContent filter={filter} setFilter={setFilter} ></DropDownContent> : ''}
-          </motion.li>
-          <motion.li layout className="filter-item">Super</motion.li>
+          {/* <motion.li layout className="filter-item">Subdivision</motion.li> */}
+          <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={getUnique(homes, 'subdivisionAndPhase')} dropDownName={'Subdivision'} />
+          <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={CITY_FILTER_NAMES} dropDownName={'City'} />
+          {/* <motion.li layout className="filter-item">Super</motion.li> */}
+          <DropDown filter={filter} setFilter={setFilter} FILTER_NAMES={getUnique(homes, 'projectManager')} dropDownName={'Super'} />
+
           <motion.li layout className="filter-item">Realtor</motion.li>
           <motion.li layout className="filter-item">Sale</motion.li>
           <motion.li layout className="filter-item">Todos</motion.li>
@@ -427,7 +417,7 @@ function NavFilter({ filter, setFilter }) {
 }
 
 
-function NavBar({ handleForce, filter, setFilter }) {
+function NavBar({ handleForce, filter, setFilter, testSubArray, homes }) {
   const [expanded, setExpanded] = useState(false);
 
   const handleClick = () => {
@@ -457,7 +447,7 @@ function NavBar({ handleForce, filter, setFilter }) {
               </li>
       </ul>
       <div className="break"></div>
-      { expanded ? <NavFilter filter={filter} setFilter={setFilter} ></NavFilter> : null}
+      { expanded ? <NavFilter filter={filter} setFilter={setFilter} testSubArray={testSubArray} homes={homes}></NavFilter> : null}
     </nav>
   );
 }
@@ -471,7 +461,39 @@ const CITIES_MAP = {
   'West Richland': home => home.city === 'West Richland'
 };
 
+
 const CITY_FILTER_NAMES = Object.keys(CITIES_MAP);
+
+
+
+
+
+function setColor(indicatorVal) {
+  if (indicatorVal) {
+    return 'rgb(122, 209, 106)'
+  } else {
+    return 'rgb(214, 79, 79)'
+  }
+}
+
+function subMapper (sub, target) {
+  let formattedSub = {[sub]: home => home.subdivisionAndPhase === sub}
+  console.log(formattedSub)
+  Object.assign(target, formattedSub)
+  // return {[sub]: home => home.subdivisionAndPhase === `${sub}`}
+  return formattedSub
+
+}
+
+
+function getUnique (array, key) {
+  let arrayKeyValues = []
+  for (let i = 0; i < array.length; i++) {
+      const element = array[i][key];
+      arrayKeyValues.push(element)
+  }
+  return arrayKeyValues.filter((v, i, a) => a.indexOf(v) === i)
+}
 
 function App() {
 
@@ -506,18 +528,109 @@ function App() {
 
   // const filtered = homes.filter(home => home.city === 'West Richland')
 
-  const filteredHomes = homes.filter(CITIES_MAP[filter])
+  // const filteredHomes = homes.filter(CITIES_MAP[filter])
 
+  const thing = undefined
+  const specificThing = undefined
+  const filteredHomes = homes.filter(home => home[thing] === specificThing)
+  
 
   // useEffect(() => {
   //   setFilteredHomes([])
   //   setFilteredHomes(homes.filter(CITIES_MAP[filter]))
   // }, [filter, homes])
 
+  const columns = [
+    {key: 'streetAddress', name: 'Address'},
+    {key: 'company', name: 'Company'},
+    {key: 'subdivisionAndPhase', name: 'Subdivision'}
+  ]
+
+
+
+
+  let testSubArray = getUnique(homes, 'subdivisionAndPhase')
+
+  console.log(testSubArray) 
+
+
+  const SUBDIVISION_MAP = {}
+  const SUBDIVISION_FILTER_NAMES = Object.keys(SUBDIVISION_MAP);
+
+  for (let i = 0; i < testSubArray.length; i++) {
+    const element = testSubArray[i];
+    // console.log(subMapper(element, SUBDIVISION_MAP))
+    subMapper(element, SUBDIVISION_MAP)
+    // SUBDIVISION_MAP[element] = home => home.subdivisionAndPhase === element
+  }
+
+  console.log(CITIES_MAP)
+  console.log(SUBDIVISION_MAP)
+  
+
 
   return (
     <AnimateSharedLayout type="crossfade">
-      <NavBar handleForce={handleForce} filter={filter} setFilter={setFilter}> </NavBar>
+      <NavBar handleForce={handleForce} filter={filter} setFilter={setFilter} testSubArray={testSubArray} homes={homes}></NavBar>
+
+
+    {/* <Table data={filteredHomes} height={800} style={{ backgroundColor: "rgb(46,46,52)" }} >
+      <Column width={100} fixed resizable >
+        <HeaderCell style={{ backgroundColor: 'rgb(46,46,52)', color: 'white' }} >Address</HeaderCell>
+        <Cell dataKey="streetAddress" style={{ backgroundColor: "rgb(46,46,52)", fontFamily: 'Roboto, sans-serif', fontWeight: 500, color: 'white', border: '1px solid rgb(73,73,77)', borderRight: '0px solid white', borderLeft: '0px solid white'}}/>
+      </Column>
+
+      <Column width={100} resizable>
+        <HeaderCell style={{ backgroundColor: 'rgb(46,46,52)', color: 'white' }} >Company</HeaderCell>
+        <Cell dataKey="company" style={{ backgroundColor: "rgb(46,46,52)", border: '1px solid rgb(73,73,77)', borderRight: '0px solid white', borderLeft: '0px solid white' }} >
+          {(rowData, rowIndex) => {
+            return <div className='infopill' style={{width: 'min-content'}} >{rowData.company}</div>
+          }}
+        </Cell>
+      </Column>
+
+      <Column width={100} resizable>
+        <HeaderCell style={{ backgroundColor: 'rgb(46,46,52)', color: 'white' }} >Subdivision</HeaderCell>
+        <Cell dataKey="subdivisionAndPhase" style={{ backgroundColor: "rgb(46,46,52)", border: '1px solid rgb(73,73,77)', borderRight: '0px solid white', borderLeft: '0px solid white' }} >
+        {(rowData, rowIndex) => {
+            return <div className='infopill' style={{width: 'min-content'}} >{rowData.subdivisionAndPhase}</div>
+          }}
+        </Cell>
+      </Column>
+
+      <Column width={100} resizable>
+        <HeaderCell style={{ backgroundColor: 'rgb(46,46,52)', color: 'white' }} >Indicators</HeaderCell>
+          <Cell dataKey="indicator" style={{ backgroundColor: "rgb(46,46,52)", border: '1px solid rgb(73,73,77)', borderRight: '0px solid white', borderLeft: '0px solid white' }} >
+          {(rowData, rowIndex) => {
+              return ( 
+              <div style={{ display: 'flex' }}>
+                <div className='indicator' style={{ backgroundColor: setColor(rowData.selections), width: 'min-content' }}>Selections</div>
+                <div className='indicator' style={{ backgroundColor: setColor(rowData.osb), width: 'min-content' }}>OSB</div>
+                <div className='indicator' style={{ backgroundColor: setColor(rowData.planReview), width: 'min-content' }}>Fee</div>
+                <div className='indicator' style={{ backgroundColor: setColor(rowData.floorJoists), width: 'min-content' }}>Joists</div>
+                <div className='indicator' style={{ backgroundColor: setColor(rowData.ccrs), width: 'min-content' }}>CCR</div>
+                <div className='indicator' style={{ backgroundColor: setColor(rowData.lumber), width: 'min-content' }}>Lumber</div>
+                <div className='indicator' style={{ backgroundColor: setColor(rowData.trusses), width: 'min-content' }}>Trusses</div>
+              </div>
+              )
+            }}
+          </Cell>
+        </Column>
+
+      <Column width={100} resizable>
+        <HeaderCell style={{ backgroundColor: 'rgb(46,46,52)', color: 'white' }} >Progress</HeaderCell>
+        <Cell dataKey="progress" style={{ backgroundColor: "rgb(46,46,52)", border: '1px solid rgb(73,73,77)', borderRight: '0px solid white', borderLeft: '0px solid white' }} >
+        {(rowData, rowIndex) => {
+            return (
+              <div className='grouper oof'>
+                <progress max='100' value={rowData.progress} ></progress>
+                <div className='progress-text' >{rowData.progress}%</div>
+              </div>
+            )
+          }}
+        </Cell>
+      </Column>
+    </Table> */}
 
       {/* <TestButton fetchData={fetchData} anotherVal={homes}></TestButton> */}
       {/* <button onClick={handleForce}></button> */}
@@ -552,7 +665,10 @@ function App() {
           >
           </ExpandedCard>
         )}
+
       </AnimatePresence>
+
+
     </AnimateSharedLayout>
 
   );

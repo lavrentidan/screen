@@ -12,8 +12,8 @@ let dirtyProgress;
 
 // Parses the json data and save it to a variable
 const fetchProgress = async () => {
-    let houses_progress = await (await fetch('/.netlify/functions/progressPuller')).json()
-    lel = JSON.parse(houses_progress.data.chartData)
+    lel = await (await fetch('/.netlify/functions/progressPuller')).json()
+    // lel = JSON.parse(houses_progress)
     return lel
 }
 
@@ -32,14 +32,14 @@ async function finalProgressFetch() {
 
 
         // Set newArray to list round numbers of the completion
-        for (let i = 0; i < lel.series[0].data.length; i++) {
-            const element = lel.series[0].data[i].y;
+        for (let i = 0; i < lel.jobProgress.length; i++) {
+            const element = lel.jobProgress[i];
             newArray.push(Math.round(element))
         }
 
         // Set newNewArray to list all the houses
-        for (let i = 0; i < lel.categories.length; i++) {
-            const element = lel.categories[i];
+        for (let i = 0; i < lel.jobName.length; i++) {
+            const element = lel.jobName[i];
             newNewArray.push(element)
         }
 

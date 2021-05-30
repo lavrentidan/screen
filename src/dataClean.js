@@ -166,15 +166,21 @@ const progressAppend = (element, progArray) => {
     }
 }
 
-
+const sortDate = (array) => {
+    homes = array.sort((a, b) => b.date - a.date)
+}
 
 
 let homes = [];
 let houseObject = {};
 let dirtyProgress = [];
+let infinityHomes = [];
 
 const fetchHouses = async () =>
     await (await fetch('/.netlify/functions/puller')).json();
+
+// const fetchInfinityHouses = async () =>
+//     await (await fetch('./')).json()
 
 const fetchProgress = async () => {
     let oof =  finalProgressFetch()
@@ -184,6 +190,7 @@ const fetchProgress = async () => {
 async function finalFetch () {
 
     dirtyProgress = await (await finalProgressFetch())
+    // infinityHomes = await (await fetchInfinityHouses())
     fetchHouses().then((houses) => {
 
     let firstRow = houses[0];
