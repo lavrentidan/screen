@@ -1,7 +1,7 @@
 # Design structure/mockups
 
 Screenshot_20210611-190953.jpg
-![Made in adobe xd](https://github.com/lavrentidan/screen/commit/237cf5a394e72564b04ed56dfbcd039a8c994ff8)
+![Made in adobe xd](https://github.com/lavrentidan/screen/blob/main/Screenshot_20210611-190953.jpg)
 https://github.com/lavrentidan/screen/commit/237cf5a394e72564b04ed56dfbcd039a8c994ff8
 
 # Getting Started with Create React App
